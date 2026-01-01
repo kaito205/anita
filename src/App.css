@@ -1,0 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Pacifico&display=swap');
+
+.birthday-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.intro-screen {
+  text-align: center;
+  background: white;
+  padding: 3rem;
+  border-radius: 30px;
+  box-shadow: 0 10px 30px rgba(255, 105, 180, 0.2);
+}
+
+.intro-screen h1 {
+  font-family: 'Outfit', sans-serif;
+  color: #ff69b4;
+  margin-bottom: 2rem;
+}
+
+.start-button {
+  background: #ff69b4;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+}
+
+.main-content {
+  max-width: 800px;
+  width: 100%;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: 40px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.decorations {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.balloon {
+  position: absolute;
+  width: 40px;
+  height: 50px;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  opacity: 0.6;
+}
+
+.balloon:after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  width: 2px;
+  height: 20px;
+  background: rgba(0,0,0,0.1);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-family: 'Pacifico', cursive;
+  font-size: 3rem;
+  color: #ff4d94;
+  margin: 1rem 0;
+  line-height: 1.2;
+}
+
+.name {
+  color: #ff1493;
+  text-shadow: 2px 2px 4px rgba(255, 20, 147, 0.2);
+}
+
+.subtitle {
+  font-family: 'Outfit', sans-serif;
+  color: #888;
+  font-size: 1.2rem;
+}
+
+.interactive-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.card {
+  background: white;
+  padding: 2rem;
+  border-radius: 25px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.small-card {
+  padding: 1rem;
+}
+
+.small-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.photo-card {
+  padding: 1rem;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.polaroid {
+  background: white;
+  padding: 1rem 1rem 3rem 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border: 1px solid #eee;
+  width: 100%;
+}
+
+.birthday-photo {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.polaroid-caption {
+  font-family: 'Pacifico', cursive;
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+  color: #555;
+  text-align: center;
+}
+
+.music-control {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.control-btn {
+  background: rgba(255, 105, 180, 0.1);
+  border: none;
+  color: #ff69b4;
+  padding: 0.8rem;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.control-btn:hover {
+  background: rgba(255, 105, 180, 0.2);
+  transform: scale(1.1);
+}
+
+.gift-box, .cake-container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+}
+
+.cake-container {
+  position: relative;
+}
+
+.candle-flame {
+  width: 15px;
+  height: 25px;
+  background: #ffd700;
+  border-radius: 50% 50% 20% 20%;
+  position: absolute;
+  top: 10px;
+  box-shadow: 0 0 10px #ffd700;
+  animation: flicker 0.5s infinite alternate;
+}
+
+.candle-flame.blown {
+  display: none;
+}
+
+@keyframes flicker {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0.8; transform: scale(1.1); }
+}
+
+.message-section {
+  margin-bottom: 3rem;
+}
+
+.message-bubble {
+  background: #fff0f5;
+  padding: 2rem;
+  border-radius: 30px 30px 30px 5px;
+  border: 2px dashed #ffb6c1;
+  font-style: italic;
+  color: #d02090;
+}
+
+.footer {
+  text-align: center;
+  border-top: 1px solid #eee;
+  padding-top: 2rem;
+}
+
+.footer p {
+  color: #aaa;
+}
+
+.stars {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.star-icon {
+  color: #ffd700;
+  animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.icon-sparkle {
+  width: 40px;
+  height: 40px;
+}
+
+.pink { color: #ff69b4; }
+
+@media (max-width: 600px) {
+  .interactive-grid {
+    grid-template-columns: 1fr;
+  }
+  .title {
+    font-size: 2rem;
+  }
+}
