@@ -9,7 +9,62 @@ function App() {
   const [isBlown, setIsBlown] = useState(false)
   const [showMain, setShowMain] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [currentMemory, setCurrentMemory] = useState(0)
+  const [showLetter, setShowLetter] = useState(false)
+  const [clickParticles, setClickParticles] = useState([])
   const audioRef = useRef(null)
+
+  const handleScreenClick = (e) => {
+    // Only add heart if not clicking on buttons or interactive elements
+    if (e.target.closest('button') || e.target.closest('.card')) return;
+
+    const newParticle = {
+      id: Date.now(),
+      x: e.clientX,
+      y: e.clientY
+    }
+    setClickParticles(prev => [...prev.slice(-10), newParticle])
+    setTimeout(() => {
+      setClickParticles(prev => prev.filter(p => p.id !== newParticle.id))
+    }, 1000)
+  }
+
+  const memories = Array.from({ length: 27 }, (_, i) => ({
+    url: `/img/${i + 1}.jpeg`,
+    caption: [
+      "Masa kecil yang indah 🧸",
+      "Si paling ceria! ✨",
+      "Kenangan manis kita 🌸",
+      "Waktu main bareng 🍦",
+      "Senyum favorit Kakak 😊",
+      "Momen tak terlupakan 🌟",
+      "Si pendek yang makin tinggi! 📏",
+      "Hari yang penuh tawa 😂",
+      "Adik kesayangan Kakak ❤️",
+      "Gaya andalanmu! 📸",
+      "Lagi serius ya? 🧐",
+      "Makan enak bareng 🍕",
+      "Si paling rajin (kadang) 📚",
+      "Muka bantalmu! 😴",
+      "Petualangan kecil kita 🚀",
+      "Si paling heboh! 🎊",
+      "Matahari kecil di rumah ☀️",
+      "Waktu jalan-jalan 🐘",
+      "Pose paling keren 😎",
+      "Si pembuat masalah lucu 😜",
+      "Harta paling berharga 💎",
+      "Tetap jadi anak baik ya ✨",
+      "Semangat terus belajarnya! 💪",
+      "Cita-citamu pasti tercapai 🌈",
+      "Kakak selalu ada buat kamu 🤗",
+      "Dunia lebih indah ada kamu 🌍",
+      "Happy Birthday sekali lagi! 🎉"
+    ][i % 27]
+  }))
+
+  const nextMemory = () => {
+    setCurrentMemory((prev) => (prev + 1) % memories.length)
+  }
 
   const toggleMusic = () => {
     if (isPlaying) {
@@ -51,7 +106,24 @@ function App() {
   }
 
   return (
-    <div className="birthday-container">
+    <div className="birthday-container" onClick={handleScreenClick}>
+      {/* Floating Click Hearts */}
+      {clickParticles.map(p => (
+        <motion.div
+          key={p.id}
+          initial={{ opacity: 1, scale: 0.5, y: 0 }}
+          animate={{ opacity: 0, scale: 1.5, y: -100 }}
+          style={{ position: 'fixed', left: p.x, top: p.y, pointerEvents: 'none', zIndex: 9999 }}
+        >
+          <Heart size={24} fill="#ff69b4" color="#ff69b4" />
+        </motion.div>
+      ))}
+
+      <audio 
+        ref={audioRef} 
+        src="/ultah.mp3" 
+        loop 
+      />
       <AnimatePresence>
         {!showMain ? (
           <motion.div 
@@ -89,11 +161,6 @@ function App() {
               <button onClick={toggleMusic} className="control-btn">
                 {isPlaying ? <Volume2 /> : <VolumeX />}
               </button>
-              <audio 
-                ref={audioRef} 
-                src="./asset/music.mp3" 
-                loop 
-              />
             </div>
             {/* Background Decorations */}
             <div className="decorations">
@@ -132,15 +199,33 @@ function App() {
             </header>
 
             <section className="interactive-grid">
-              {/* Photo Frame */}
+              {/* Memory Slideshow */}
               <motion.div 
                 className="card photo-card"
                 initial={{ rotate: -2 }}
-                whileHover={{ rotate: 0, scale: 1.05 }}
+                whileHover={{ rotate: 0, scale: 1.02 }}
               >
-                <div className="polaroid">
-                  <img src="/photo.png" alt="Birthday Sibling" className="birthday-photo" />
-                  <div className="polaroid-caption">Best Sibling Ever! ✨</div>
+                <div className="polaroid slideshow" onClick={nextMemory}>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentMemory}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.5 }}
+                      className="memory-content"
+                    >
+                      <img 
+                        src={memories[currentMemory].url} 
+                        alt="Memory" 
+                        className="birthday-photo" 
+                      />
+                      <div className="polaroid-caption">
+                        {memories[currentMemory].caption}
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                  <div className="slideshow-hint">Klik foto untuk lihat kenangan lain 👉</div>
                 </div>
               </motion.div>
 
@@ -199,6 +284,20 @@ function App() {
             </section>
 
             <footer className="footer">
+              <div className="letter-wrapper">
+                <motion.div 
+                  className="envelope"
+                  whileHover={{ scale: 1.1, rotate: [-2, 2, -2] }}
+                  onClick={() => setShowLetter(true)}
+                >
+                  <div className="envelope-top"></div>
+                  <div className="envelope-body">
+                    <Heart className="envelope-seal" fill="#ff1493" color="#ff1493" />
+                  </div>
+                  <p className="envelope-label">Surat buat kamu 💌</p>
+                </motion.div>
+              </div>
+
               <p>Dibuat dengan ❤️ oleh Kakakmu</p>
               <div className="stars">
                 <Star className="star-icon" />
@@ -206,6 +305,40 @@ function App() {
                 <Star className="star-icon" />
               </div>
             </footer>
+
+            {/* Letter Modal */}
+            <AnimatePresence>
+              {showLetter && (
+                <motion.div 
+                  className="letter-modal-overlay"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setShowLetter(false)}
+                >
+                  <motion.div 
+                    className="letter-content"
+                    initial={{ scale: 0.8, y: 100 }}
+                    animate={{ scale: 1, y: 0 }}
+                    exit={{ scale: 0.8, y: 100 }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <button className="close-letter" onClick={() => setShowLetter(false)}>×</button>
+                    <h2>Halo Adikku Sayang... ❤️</h2>
+                    <div className="letter-text">
+                      <p>Selamat ulang tahun ya! Kakak bikin website ini khusus buat kamu karena Kakak sayang banget sama kamu.</p>
+                      <p>Waktu jalan cepet banget ya, rasanya baru kemarin kita main bareng, berantem rebutan mainan, tapi sekarang kamu udah makin dewasa dan makin hebat.</p>
+                      <p>Kakak selalu bangga liat perkembangan kamu. Jangan pernah takut buat bermimpi tinggi, karena Kakak bakal selalu ada di belakang kamu buat support apa pun yang kamu lakuin.</p>
+                      <p>Tetap jadi pribadi yang rendah hati, penyayang, dan ceria ya. Jangan lupain ibadah dan selalu jaga kesehatan.</p>
+                      <p>Semoga di umur yang baru ini, kamu makin bahagia, makin banyak rezekinya, dan semua keinginan kamu dikabulkan sama Tuhan.</p>
+                      <p>Makasih ya udah jadi adik yang luar biasa buat Kakak. Kakak janji bakal terus berusaha jadi kakak yang baik buat kamu.</p>
+                      <p>Sekali lagi, Happy Birthday! Let's make more memories together! 🎂🌸🎉</p>
+                      <p className="letter-signature">Salam Sayang,<br/>Kakakmu</p>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.main>
         )}
       </AnimatePresence>
